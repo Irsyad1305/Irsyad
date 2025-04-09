@@ -1,20 +1,26 @@
-{
-  "name": "clear",
-  "version": "1.0.0",
-  "description": "connect mongodb with express",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "start": "nodemon index.js"
-  },
-  "author": "code with Irsyad",
-  "license": "ISC",
-  "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mongoose": "^8.12.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
-  }
+import express from 'express';
+import { MongoClient } from 'mongodb';
+
+const port = 3000;
+const app = express();
+app.use(express.json());
+
+let db;
+
+async function connectToMongoDB() {
+    const uri = "mongodb://localhost:27017";
+    const client = new MongoClient(uri);
+
+    try {
+        await client.connect();
+        console.log("Connected to MongoDB!");
+        db = client.db("testDB");
+    } catch (err) {
+        console.error("Error:", err);
+    }
 }
+connectToMongoDB();
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
